@@ -34,6 +34,13 @@ bool Task::isCompleted() const {
     return ui->checkBox->isChecked();
 }
 
+void Task::setChecked(bool checked) {
+    QFont font(ui->checkBox->font());
+    font.setStrikeOut(checked);
+    ui->checkBox->setFont(font);
+    emit statusChanged(this);
+}
+
 void Task::rename() {
     bool ok{ false };
     QString value = QInputDialog::getText(this, tr("Edit Task"), tr("Task Name"), QLineEdit::Normal, this->name(), &ok);

@@ -2,7 +2,7 @@
 
 #include <QMainWindow>
 #include <QVector>
-
+#include <QJsonDocument>
 #include "Task.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -26,4 +26,10 @@ public slots:
 private:
     Ui::MainWindow* ui;
     QVector<Task*> mTasks;
+
+    bool readDB();
+    void initializeOnBegin();
+    void createTask(const QString& name, bool status);
+
+    QJsonDocument json_document;
 };
