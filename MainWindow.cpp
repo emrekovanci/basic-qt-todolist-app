@@ -13,8 +13,9 @@
 #include <QJsonParseError>
 #include <QJsonObject>
 #include <QStandardPaths>
+#include <QDir>
 
-#include <QtAndroidExtras/QtAndroid>
+//#include <QtAndroidExtras/QtAndroid>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -25,7 +26,7 @@ MainWindow::MainWindow(QWidget* parent)
     initializeOnBegin();
     updateStatus();
 
-    requestAndroidPermissions();
+    //requestAndroidPermissions();
 }
 
 MainWindow::~MainWindow() {
@@ -44,21 +45,20 @@ void MainWindow::addTask() {
         connect(task, &Task::removed, this, &MainWindow::removeTask);
         updateStatus();
 
-        auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        auto path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
         auto fileName = path + "/db.json";
-        QJsonDocument document = load_json(fileName);
-
-        QJsonObject root = document.object();
-        QJsonValueRef ref = root.find("Tasks").value();
-        QJsonArray array = ref.toArray();
-        array.append(QJsonObject{
-            {"name", name},
-            {"status", false}
-        });
-
-        ref = array;
         document.setObject(root);
-        save_json(document, fileName);
+        qDebug() << fileName;
+
+        QJsonObject new_json;
+        new_json.insert("name", name);
+        new_json.insert("status", false);
+
+        QJsonArray array = json_document.array();
+        array.append(new_json);
+
+        json_document.setArray(array);
+        save_json(json_document, fileName);
     }
 }
 
@@ -74,7 +74,7 @@ void MainWindow::taskStatusChanged(Task* /*task*/) {
 }
 
 bool MainWindow::readDB() {
-    auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    auto path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
     auto fileName = path + "/db.json";
     qDebug() << "File reading:" << fileName;
 
@@ -97,12 +97,12 @@ bool MainWindow::readDB() {
 
 void MainWindow::initializeOnBegin() {
     if (readDB()) {
-        QJsonObject root_object = json_document.object();
-        QJsonArray task_array = root_object.value("Tasks").toArray();
+        QJsonArray task_array = json_document.array();
         foreach (const QJsonValue& val, task_array) {
             QString name = val.toObject().value("name").toString();
             bool status = val.toObject().value("status").toBool();
             createTask(name, status);
+            qDebug() << "Task Name:" << name;
         }
     }
 }
@@ -126,6 +126,9 @@ void MainWindow::save_json(QJsonDocument document, QString file_name) {
     QFile json_file{ file_name };
     json_file.open(QIODevice::ReadWrite | QFile::Truncate);
     json_file.write(document.toJson());
+    if (json_file.error()) {
+        qDebug() << "SaveError:" << json_file.errorString();
+    }
 }
 
 void MainWindow::updateStatus() {
@@ -140,7 +143,7 @@ void MainWindow::updateStatus() {
     ui->statusLabel->setText(QString("Status: %1 todo / %2 completed").arg(todoCount).arg(completedCount));
 }
 
-bool MainWindow::requestAndroidPermissions() {
+/*bool MainWindow::requestAndroidPermissions() {
     // Request requiered permissions at runtime
     const QVector<QString> permissions({
         "android.permission.WRITE_EXTERNAL_STORAGE",
@@ -156,5 +159,5 @@ bool MainWindow::requestAndroidPermissions() {
     }
 
     return true;
-}
+}*/
 
