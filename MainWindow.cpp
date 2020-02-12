@@ -47,7 +47,6 @@ void MainWindow::addTask() {
 
         auto path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
         auto fileName = path + "/db.json";
-        document.setObject(root);
         qDebug() << fileName;
 
         QJsonObject new_json;
