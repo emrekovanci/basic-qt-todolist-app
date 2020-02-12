@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<manifest package="org.Talus.TodoList" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="-- %%INSERT_VERSION_NAME%% --" android:versionCode="-- %%INSERT_VERSION_CODE%% --" android:installLocation="auto">
-    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>
+<manifest package="org.talus.todolist" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="Alpha" android:versionCode="2" android:installLocation="preferExternal">
+    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="26"/>
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.
          Remove the comment if you do not require these default permissions. -->
@@ -77,7 +77,7 @@
                 * minimal - useful for Quick Controls 2 apps, it is much faster than "full"
                 * none - useful for apps that don't use any of the above Qt modules
                 -->
-            <meta-data android:name="android.app.extract_android_style" android:value="default"/>
+            <meta-data android:name="android.app.extract_android_style" android:value="full"/>
             <!-- extract android style -->
     </activity>
 
@@ -85,4 +85,8 @@
 
     </application>
 
+
+
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 </manifest>

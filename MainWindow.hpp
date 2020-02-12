@@ -31,5 +31,10 @@ private:
     void initializeOnBegin();
     void createTask(const QString& name, bool status);
 
+    QJsonDocument load_json(QString file_name);
+    void save_json(QJsonDocument document, QString file_name);
+
     QJsonDocument json_document;
+
+    bool requestAndroidPermissions();
 };
