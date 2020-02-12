@@ -36,5 +36,7 @@ private:
 
     QJsonDocument json_document;
 
+    #ifdef Q_OS_ANDROID
     bool requestAndroidPermissions();
+    #endif
 };

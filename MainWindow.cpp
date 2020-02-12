@@ -15,7 +15,9 @@
 #include <QStandardPaths>
 #include <QDir>
 
-//#include <QtAndroidExtras/QtAndroid>
+#ifdef Q_OS_ANDROID
+    #include <QtAndroidExtras/QtAndroidExtras>
+#endif
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -26,7 +28,9 @@ MainWindow::MainWindow(QWidget* parent)
     initializeOnBegin();
     updateStatus();
 
-    //requestAndroidPermissions();
+    #ifdef Q_OS_ANDROID
+        requestAndroidPermissions();
+    #endif
 }
 
 MainWindow::~MainWindow() {
@@ -45,14 +49,16 @@ void MainWindow::addTask() {
         connect(task, &Task::removed, this, &MainWindow::removeTask);
         updateStatus();
 
+        // get db path
         auto path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
         auto fileName = path + "/db.json";
-        qDebug() << fileName;
 
+        // create new json object with properties
         QJsonObject new_json;
         new_json.insert("name", name);
         new_json.insert("status", false);
 
+        // add created json object to json array
         QJsonArray array = json_document.array();
         array.append(new_json);
 
@@ -142,7 +148,8 @@ void MainWindow::updateStatus() {
     ui->statusLabel->setText(QString("Status: %1 todo / %2 completed").arg(todoCount).arg(completedCount));
 }
 
-/*bool MainWindow::requestAndroidPermissions() {
+#ifdef Q_OS_ANDROID
+bool MainWindow::requestAndroidPermissions() {
     // Request requiered permissions at runtime
     const QVector<QString> permissions({
         "android.permission.WRITE_EXTERNAL_STORAGE",
@@ -158,5 +165,5 @@ void MainWindow::updateStatus() {
     }
 
     return true;
-}*/
-
+}
+#endif
