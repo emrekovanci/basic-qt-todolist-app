@@ -5,6 +5,8 @@
 #include <QJsonDocument>
 #include "Task.hpp"
 
+#include <QStandardPaths>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -26,17 +28,19 @@ public slots:
 private:
     Ui::MainWindow* ui;
     QVector<Task*> mTasks;
+    QJsonDocument jsonDocument;
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
 
+private:
     bool readDB();
     void initializeOnBegin();
-    void createTask(const QString& name, bool status);
+    void createTask(int id, const QString& name, bool status);
 
-    QJsonDocument load_json(QString file_name);
-    void save_json(QJsonDocument document, QString file_name);
+    QJsonDocument loadJson(const QString& fileName);
+    void saveJson(const QJsonDocument& document, const QString& fileName);
 
-    QJsonDocument json_document;
 
     #ifdef Q_OS_ANDROID
-    bool requestAndroidPermissions();
+        bool requestAndroidPermissions();
     #endif
 };

@@ -6,21 +6,33 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>402</width>
-    <height>178</height>
+    <width>326</width>
+    <height>175</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Todo</string>
+   <string>toDO</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <layout class="QHBoxLayout" name="toolBarLayout">
       <item>
-       <widget class="QLabel" name="statusLabel">
-        <property name="text">
-         <string>Status: 0 todo / 0 done</string>
+       <widget class="QProgressBar" name="progressBar">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="value">
+         <number>24</number>
         </property>
        </widget>
       </item>
@@ -31,7 +43,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>20</width>
           <height>20</height>
          </size>
         </property>
@@ -40,10 +52,20 @@
       <item>
        <widget class="QPushButton" name="addTaskButton">
         <property name="autoFillBackground">
-         <bool>false</bool>
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Add Task</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="clearAllButton">
+        <property name="text">
+         <string>Clear All</string>
         </property>
        </widget>
       </item>

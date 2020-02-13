@@ -20,6 +20,9 @@ public:
     bool isCompleted() const;
     void setChecked(bool checked);
 
+    int getTaskId() const;
+    void setTaskId(int id);
+
 public slots:
     void rename();
 
@@ -32,5 +35,6 @@ private slots:
 
 private:
     Ui::Task* ui;
+    int taskId{};
 };
 

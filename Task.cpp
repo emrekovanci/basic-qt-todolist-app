@@ -41,6 +41,14 @@ void Task::setChecked(bool checked) {
     emit statusChanged(this);
 }
 
+int Task::getTaskId() const {
+    return taskId;
+}
+
+void Task::setTaskId(int id) {
+    taskId = id;
+}
+
 void Task::rename() {
     bool ok{ false };
     QString value = QInputDialog::getText(this, tr("Edit Task"), tr("Task Name"), QLineEdit::Normal, this->name(), &ok);
