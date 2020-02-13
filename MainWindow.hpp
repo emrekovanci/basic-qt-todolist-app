@@ -38,9 +38,4 @@ private:
 
     QJsonDocument loadJson(const QString& fileName);
     void saveJson(const QJsonDocument& document, const QString& fileName);
-
-
-    #ifdef Q_OS_ANDROID
-        bool requestAndroidPermissions();
-    #endif
 };

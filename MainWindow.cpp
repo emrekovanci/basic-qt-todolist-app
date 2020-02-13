@@ -3,21 +3,14 @@
 
 #include <QDebug>
 #include <QString>
-#include <QList>
-#include <QVariant>
 #include <QFile>
 
 #include <QInputDialog>
+
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonParseError>
 #include <QJsonObject>
-#include <QStandardPaths>
-#include <QDir>
-
-#ifdef Q_OS_ANDROID
-    #include <QtAndroidExtras/QtAndroidExtras>
-#endif
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -33,10 +26,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     });
     initializeOnBegin();
     updateStatus();
-
-    #ifdef Q_OS_ANDROID
-        requestAndroidPermissions();
-    #endif
 }
 
 MainWindow::~MainWindow() {
@@ -169,23 +158,3 @@ void MainWindow::updateStatus() {
     int todoCount{ mTasks.size() - completedCount };
   //  ui->statusLabel->setText(QString("Status: %1 todo / %2 completed").arg(todoCount).arg(completedCount));
 }
-
-#ifdef Q_OS_ANDROID
-bool MainWindow::requestAndroidPermissions() {
-    // Request requiered permissions at runtime
-    const QVector<QString> permissions({
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.READ_EXTERNAL_STORAGE"});
-
-    for (const QString& permission : permissions) {
-        auto result = QtAndroid::checkPermission(permission);
-        if(result == QtAndroid::PermissionResult::Denied) {
-            auto resultHash = QtAndroid::requestPermissionsSync(QStringList({permission}));
-            if(resultHash[permission] == QtAndroid::PermissionResult::Denied)
-                return false;
-        }
-    }
-
-    return true;
-}
-#endif
