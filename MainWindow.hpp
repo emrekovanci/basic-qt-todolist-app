@@ -3,9 +3,9 @@
 #include <QMainWindow>
 #include <QVector>
 #include <QJsonDocument>
-#include "Task.hpp"
-
 #include <QStandardPaths>
+
+#include "Task.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

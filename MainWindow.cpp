@@ -50,6 +50,7 @@ void MainWindow::clearAllTasks()
     {
         delete item;
     }
+    _Tasks.clear();
 
     QFile file(_DbPath);
     file.open(QIODevice::WriteOnly | QIODevice::Truncate);
@@ -99,14 +100,17 @@ void MainWindow::removeTask(Task* task)
             array.removeAt(jsonId);
             _JsonDoc.setArray(array);
             saveJson(_JsonDoc, _DbPath);
+
             qDebug() << "task removed in json database!";
         }
     }
 
     // remove the task
-    _Tasks.removeOne(task);
-    ui->tasksLayout->removeWidget(task);
     delete task;
+    task = nullptr;
+    ui->tasksLayout->removeWidget(task);
+    _Tasks.erase(std::remove(std::begin(_Tasks) ,std::end(_Tasks), nullptr), std::end(_Tasks));
+
     updateStatus();
 }
 
