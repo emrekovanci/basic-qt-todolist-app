@@ -30,7 +30,7 @@ private:
     Ui::MainWindow* ui;
     QVector<Task*> _Tasks;
     QJsonDocument _JsonDoc;
-    const QString path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+    QString _DbPath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + QString("/db.json");
 
 private:
     bool readDB();
