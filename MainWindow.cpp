@@ -18,14 +18,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->addTaskButton, &QPushButton::clicked, this, &MainWindow::addTask);
     connect(ui->clearAllButton, &QPushButton::clicked, [this] ()
     {
-        auto fileName = this->path + "/db.json";
+        auto fileName = this->_Path + "/db.json";
         QFile file(fileName);
         file.open(QIODevice::WriteOnly | QIODevice::Truncate);
         file.close();
-        for (auto item : mTasks)
-        {
-            delete item;
-        }
     });
     initializeOnBegin();
     updateStatus();
@@ -45,35 +41,35 @@ void MainWindow::addTask()
     {
         qDebug() << "Adding new task";
         Task* task = new Task(name);
-        task->setTaskId(mTasks.size());
-        mTasks.append(task);
+        task->setTaskId(_Tasks.size());
+        _Tasks.append(task);
         ui->tasksLayout->addWidget(task);
         connect(task, &Task::removed, this, &MainWindow::removeTask);
         updateStatus();
 
         // get db path
-        auto fileName = this->path + "/db.json";
+        auto fileName = this->_Path + "/db.json";
 
         // create new json object with properties
         QJsonObject newJson;
         newJson.insert("name", name);
         newJson.insert("status", false);
-        newJson.insert("id", mTasks.size());
+        newJson.insert("id", _Tasks.size());
 
         // add created json object to json array
-        QJsonArray array = jsonDocument.array();
+        QJsonArray array = _JsonDoc.array();
         array.append(newJson);
 
-        jsonDocument.setArray(array);
-        saveJson(jsonDocument, fileName);
+        _JsonDoc.setArray(array);
+        saveJson(_JsonDoc, fileName);
     }
 }
 
 void MainWindow::removeTask(Task* task)
 {
     // search task in json and remove it
-    auto fileName = this->path + "/db.json";
-    QJsonArray array = jsonDocument.array();
+    auto fileName = this->_Path + "/db.json";
+    QJsonArray array = _JsonDoc.array();
     for (const auto taskInJson : array)
     {
         auto jsonId = taskInJson.toObject().find("id")->toInt();
@@ -81,14 +77,14 @@ void MainWindow::removeTask(Task* task)
         if (jsonId == task->getTaskId())
         {
             array.removeAt(jsonId);
-            jsonDocument.setArray(array);
-            saveJson(jsonDocument, fileName);
+            _JsonDoc.setArray(array);
+            saveJson(_JsonDoc, fileName);
             qDebug() << "task removed in json database!";
         }
     }
 
     // remove the task
-    mTasks.removeOne(task);
+    _Tasks.removeOne(task);
     ui->tasksLayout->removeWidget(task);
     delete task;
     updateStatus();
@@ -101,7 +97,7 @@ void MainWindow::taskStatusChanged(Task* /*task*/)
 
 bool MainWindow::readDB()
 {
-    auto fileName = this->path + "/db.json";
+    auto fileName = this->_Path + "/db.json";
     qDebug() << "File reading:" << fileName;
 
     QJsonParseError json_error{};
@@ -111,7 +107,7 @@ bool MainWindow::readDB()
     {
         file.open(QIODevice::ReadOnly | QIODevice::Text);
         QString jsonString = QString::fromUtf8(file.readAll());
-        jsonDocument = QJsonDocument::fromJson(jsonString.toUtf8(), &json_error);
+        _JsonDoc = QJsonDocument::fromJson(jsonString.toUtf8(), &json_error);
         if (json_error.error != QJsonParseError::NoError)
         {
             qDebug() << "Error:" << json_error.errorString() << " offset:" << json_error.offset;
@@ -126,7 +122,7 @@ void MainWindow::initializeOnBegin()
 {
     if (readDB())
     {
-        QJsonArray taskList = jsonDocument.array();
+        QJsonArray taskList = _JsonDoc.array();
         for (const auto val : taskList)
         {
             int id = val.toObject().value("id").toInt();
@@ -143,7 +139,7 @@ void MainWindow::createTask(int id, const QString& name, bool status)
     Task* task = new Task(name);
     task->setChecked(status);
     task->setTaskId(id);
-    mTasks.append(task);
+    _Tasks.append(task);
     ui->tasksLayout->addWidget(task);
     connect(task, &Task::removed, this, &MainWindow::removeTask);
     updateStatus();
@@ -170,10 +166,10 @@ void MainWindow::saveJson(const QJsonDocument& document, const QString& fileName
 void MainWindow::updateStatus()
 {
     int completedTaskCount = std::count_if(
-        std::begin(mTasks),
-        std::end(mTasks),
+        std::begin(_Tasks),
+        std::end(_Tasks),
         [](Task* task) { return task->isCompleted(); }
     );
 
-    ui->infoLabel->setText(QString("%1 todo / %2 completed").arg(mTasks.count()).arg(completedTaskCount));
+    ui->infoLabel->setText(QString("%1 todo / %2 completed").arg(_Tasks.count()).arg(completedTaskCount));
 }

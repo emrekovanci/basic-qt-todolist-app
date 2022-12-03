@@ -27,9 +27,9 @@ public slots:
 
 private:
     Ui::MainWindow* ui;
-    QVector<Task*> mTasks;
-    QJsonDocument jsonDocument;
-    const QString path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+    QVector<Task*> _Tasks;
+    QJsonDocument _JsonDoc;
+    const QString _Path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
 
 private:
     bool readDB();
