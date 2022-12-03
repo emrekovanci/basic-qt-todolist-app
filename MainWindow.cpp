@@ -169,15 +169,11 @@ void MainWindow::saveJson(const QJsonDocument& document, const QString& fileName
 
 void MainWindow::updateStatus()
 {
-    int completedCount{ 0 };
-    for (const auto& task: mTasks)
-    {
-        if (task->isCompleted())
-        {
-            ++completedCount;
-        }
-    }
+    int completedTaskCount = std::count_if(
+        std::begin(mTasks),
+        std::end(mTasks),
+        [](Task* task) { return task->isCompleted(); }
+    );
 
-    int todoCount = mTasks.size() - completedCount;
-    // ui->statusLabel->setText(QString("Status: %1 todo / %2 completed").arg(todoCount).arg(completedCount));
+    ui->infoLabel->setText(QString("%1 todo / %2 completed").arg(mTasks.count()).arg(completedTaskCount));
 }

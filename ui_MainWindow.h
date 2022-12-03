@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
@@ -26,6 +27,8 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
+    QLabel *infoLabel;
+    QSpacerItem *verticalSpacer_2;
     QHBoxLayout *toolBarLayout;
     QProgressBar *progressBar;
     QSpacerItem *horizontalSpacer;
@@ -45,6 +48,15 @@ public:
         centralwidget->setObjectName("centralwidget");
         verticalLayout = new QVBoxLayout(centralwidget);
         verticalLayout->setObjectName("verticalLayout");
+        infoLabel = new QLabel(centralwidget);
+        infoLabel->setObjectName("infoLabel");
+
+        verticalLayout->addWidget(infoLabel);
+
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout->addItem(verticalSpacer_2);
+
         toolBarLayout = new QHBoxLayout();
         toolBarLayout->setObjectName("toolBarLayout");
         progressBar = new QProgressBar(centralwidget);
@@ -96,6 +108,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "toDO", nullptr));
+        infoLabel->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
         addTaskButton->setText(QCoreApplication::translate("MainWindow", "Add Task", nullptr));
         clearAllButton->setText(QCoreApplication::translate("MainWindow", "Clear All", nullptr));
     } // retranslateUi
