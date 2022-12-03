@@ -110,11 +110,6 @@ void MainWindow::removeTask(Task* task)
     updateStatus();
 }
 
-void MainWindow::taskStatusChanged(Task* /*task*/)
-{
-    updateStatus();
-}
-
 bool MainWindow::readDB()
 {
     qDebug() << "File reading:" << _DbPath;

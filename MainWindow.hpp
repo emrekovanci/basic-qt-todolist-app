@@ -24,7 +24,6 @@ public slots:
     void clearAllTasks();
     void addTask();
     void removeTask(Task* task);
-    void taskStatusChanged(Task*);
 
 private:
     Ui::MainWindow* ui;
