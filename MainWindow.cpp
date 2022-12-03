@@ -155,6 +155,6 @@ void MainWindow::updateStatus() {
         }
     }
 
-    int todoCount{ mTasks.size() - completedCount };
-  //  ui->statusLabel->setText(QString("Status: %1 todo / %2 completed").arg(todoCount).arg(completedCount));
+    int todoCount = mTasks.size() - completedCount;
+    // ui->statusLabel->setText(QString("Status: %1 todo / %2 completed").arg(todoCount).arg(completedCount));
 }
