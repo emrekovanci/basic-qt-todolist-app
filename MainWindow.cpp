@@ -72,14 +72,14 @@ void MainWindow::addTask()
         updateStatus();
 
         // create new json object with properties
-        QJsonObject newJson;
-        newJson.insert("name", name);
-        newJson.insert("status", false);
-        newJson.insert("id", _Tasks.size());
+        QJsonObject taskValues;
+        taskValues.insert("name", name);
+        taskValues.insert("status", false);
+        taskValues.insert("id", _Tasks.size());
 
         // add created json object to json array
         QJsonArray array = _JsonDoc.array();
-        array.append(newJson);
+        array.append(taskValues);
         _JsonDoc.setArray(array);
 
         saveJson(_JsonDoc, _DbPath);
