@@ -12,15 +12,18 @@
 #include <QJsonParseError>
 #include <QJsonObject>
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
+{
     ui->setupUi(this);
     connect(ui->addTaskButton, &QPushButton::clicked, this, &MainWindow::addTask);
-    connect(ui->clearAllButton, &QPushButton::clicked, [this] () {
+    connect(ui->clearAllButton, &QPushButton::clicked, [this] ()
+    {
         auto fileName = this->path + "/db.json";
         QFile file(fileName);
         file.open(QIODevice::WriteOnly | QIODevice::Truncate);
         file.close();
-        for (auto item : mTasks) {
+        for (auto item : mTasks)
+        {
             delete item;
         }
     });
@@ -28,15 +31,18 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     updateStatus();
 }
 
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
     delete ui;
 }
 
-void MainWindow::addTask() {
+void MainWindow::addTask()
+{
     bool ok{ false };
     QString name = QInputDialog::getText(this, tr("Add Task"), tr("Task Name"), QLineEdit::Normal, tr("Untitled Task"), &ok);
 
-    if (ok && !name.isEmpty()) {
+    if (ok && !name.isEmpty())
+    {
         qDebug() << "Adding new task";
         Task* task = new Task(name);
         task->setTaskId(mTasks.size());
@@ -63,14 +69,17 @@ void MainWindow::addTask() {
     }
 }
 
-void MainWindow::removeTask(Task* task) {
+void MainWindow::removeTask(Task* task)
+{
     // search task in json and remove it
     auto fileName = this->path + "/db.json";
     QJsonArray array = jsonDocument.array();
-    for (const auto taskInJson : array) {
+    for (const auto taskInJson : array)
+    {
         auto jsonId = taskInJson.toObject().find("id")->toInt();
         qDebug() << "jsonId:" << jsonId;
-        if (jsonId == task->getTaskId()) {
+        if (jsonId == task->getTaskId())
+        {
             array.removeAt(jsonId);
             jsonDocument.setArray(array);
             saveJson(jsonDocument, fileName);
@@ -85,22 +94,26 @@ void MainWindow::removeTask(Task* task) {
     updateStatus();
 }
 
-void MainWindow::taskStatusChanged(Task* /*task*/) {
+void MainWindow::taskStatusChanged(Task* /*task*/)
+{
     updateStatus();
 }
 
-bool MainWindow::readDB() {
+bool MainWindow::readDB()
+{
     auto fileName = this->path + "/db.json";
     qDebug() << "File reading:" << fileName;
 
     QJsonParseError json_error{};
 
     QFile file(fileName);
-    if (file.exists()) {
+    if (file.exists())
+    {
         file.open(QIODevice::ReadOnly | QIODevice::Text);
         QString jsonString = QString::fromUtf8(file.readAll());
         jsonDocument = QJsonDocument::fromJson(jsonString.toUtf8(), &json_error);
-        if (json_error.error != QJsonParseError::NoError) {
+        if (json_error.error != QJsonParseError::NoError)
+        {
             qDebug() << "Error:" << json_error.errorString() << " offset:" << json_error.offset;
             return false;
         }
@@ -109,10 +122,13 @@ bool MainWindow::readDB() {
     return false;
 }
 
-void MainWindow::initializeOnBegin() {
-    if (readDB()) {
+void MainWindow::initializeOnBegin()
+{
+    if (readDB())
+    {
         QJsonArray taskList = jsonDocument.array();
-        for (const auto val : taskList) {
+        for (const auto val : taskList)
+        {
             int id = val.toObject().value("id").toInt();
             QString name = val.toObject().value("name").toString();
             bool status = val.toObject().value("status").toBool();
@@ -122,7 +138,8 @@ void MainWindow::initializeOnBegin() {
     }
 }
 
-void MainWindow::createTask(int id, const QString& name, bool status) {
+void MainWindow::createTask(int id, const QString& name, bool status)
+{
     Task* task = new Task(name);
     task->setChecked(status);
     task->setTaskId(id);
@@ -132,25 +149,31 @@ void MainWindow::createTask(int id, const QString& name, bool status) {
     updateStatus();
 }
 
-QJsonDocument MainWindow::loadJson(const QString& fileName) {
+QJsonDocument MainWindow::loadJson(const QString& fileName)
+{
     QFile jsonFile{ fileName };
     jsonFile.open(QIODevice::ReadOnly);
     return QJsonDocument::fromJson(jsonFile.readAll());
 }
 
-void MainWindow::saveJson(const QJsonDocument& document, const QString& fileName) {
+void MainWindow::saveJson(const QJsonDocument& document, const QString& fileName)
+{
     QFile jsonFile{ fileName };
     jsonFile.open(QIODevice::WriteOnly | QFile::Truncate);
     jsonFile.write(document.toJson());
-    if (jsonFile.error()) {
+    if (jsonFile.error())
+    {
         qDebug() << "SaveError:" << jsonFile.errorString();
     }
 }
 
-void MainWindow::updateStatus() {
+void MainWindow::updateStatus()
+{
     int completedCount{ 0 };
-    for (const auto& task: mTasks) {
-        if (task->isCompleted()) {
+    for (const auto& task: mTasks)
+    {
+        if (task->isCompleted())
+        {
             ++completedCount;
         }
     }
