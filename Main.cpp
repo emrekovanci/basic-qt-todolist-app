@@ -5,18 +5,24 @@
 #ifdef Q_OS_ANDROID
     #include <QtAndroidExtras/QtAndroidExtras>
 
-    bool requestAndroidPermissions() {
+    bool requestAndroidPermissions()
+    {
         // Request requiered permissions at runtime
         const QVector<QString> permissions({
             "android.permission.WRITE_EXTERNAL_STORAGE",
-            "android.permission.READ_EXTERNAL_STORAGE"});
+            "android.permission.READ_EXTERNAL_STORAGE"
+        });
 
-        for (const QString& permission : permissions) {
+        for (const QString& permission : permissions)
+        {
             auto result = QtAndroid::checkPermission(permission);
-            if(result == QtAndroid::PermissionResult::Denied) {
+            if (result == QtAndroid::PermissionResult::Denied)
+            {
                 auto resultHash = QtAndroid::requestPermissionsSync(QStringList({permission}));
-                if(resultHash[permission] == QtAndroid::PermissionResult::Denied)
+                if (resultHash[permission] == QtAndroid::PermissionResult::Denied)
+                {
                     return false;
+                }
             }
         }
 
