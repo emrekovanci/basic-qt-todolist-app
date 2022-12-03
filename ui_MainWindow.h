@@ -28,7 +28,6 @@ public:
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QLabel *infoLabel;
-    QSpacerItem *verticalSpacer_2;
     QHBoxLayout *toolBarLayout;
     QProgressBar *progressBar;
     QSpacerItem *horizontalSpacer;
@@ -52,10 +51,6 @@ public:
         infoLabel->setObjectName("infoLabel");
 
         verticalLayout->addWidget(infoLabel);
-
-        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout->addItem(verticalSpacer_2);
 
         toolBarLayout = new QHBoxLayout();
         toolBarLayout->setObjectName("toolBarLayout");
