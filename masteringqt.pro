@@ -1,5 +1,5 @@
 QT += core gui widgets
-CONFIG += c++17
+CONFIG += c++20
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
