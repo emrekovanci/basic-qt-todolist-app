@@ -15,21 +15,31 @@
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->addTaskButton, &QPushButton::clicked, this, &MainWindow::addTask);
-    connect(ui->clearAllButton, &QPushButton::clicked, [this] ()
-    {
-        auto fileName = this->_Path + "/db.json";
-        QFile file(fileName);
-        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-        file.close();
-    });
+
     initializeOnBegin();
     updateStatus();
+
+    connect(ui->addTaskButton, &QPushButton::clicked, this, &MainWindow::addTask);
+    connect(ui->clearAllButton, &QPushButton::clicked, this, &MainWindow::clearAllTasks);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::clearAllTasks()
+{
+    auto fileName = this->path + "/db.json";
+
+    QFile file(fileName);
+    file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+    file.close();
+
+    for (const Task* item : _Tasks)
+    {
+        delete item;
+    }
 }
 
 void MainWindow::addTask()
@@ -48,7 +58,7 @@ void MainWindow::addTask()
         updateStatus();
 
         // get db path
-        auto fileName = this->_Path + "/db.json";
+        auto fileName = this->path + "/db.json";
 
         // create new json object with properties
         QJsonObject newJson;
@@ -68,7 +78,7 @@ void MainWindow::addTask()
 void MainWindow::removeTask(Task* task)
 {
     // search task in json and remove it
-    auto fileName = this->_Path + "/db.json";
+    auto fileName = this->path + "/db.json";
     QJsonArray array = _JsonDoc.array();
     for (const auto taskInJson : array)
     {
@@ -97,7 +107,7 @@ void MainWindow::taskStatusChanged(Task* /*task*/)
 
 bool MainWindow::readDB()
 {
-    auto fileName = this->_Path + "/db.json";
+    auto fileName = this->path + "/db.json";
     qDebug() << "File reading:" << fileName;
 
     QJsonParseError json_error{};

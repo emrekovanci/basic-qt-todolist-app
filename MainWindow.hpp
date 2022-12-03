@@ -21,6 +21,7 @@ public:
     void updateStatus();
 
 public slots:
+    void clearAllTasks();
     void addTask();
     void removeTask(Task* task);
     void taskStatusChanged(Task*);
@@ -29,7 +30,7 @@ private:
     Ui::MainWindow* ui;
     QVector<Task*> _Tasks;
     QJsonDocument _JsonDoc;
-    const QString _Path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
 
 private:
     bool readDB();
