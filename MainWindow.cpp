@@ -93,23 +93,24 @@ void MainWindow::removeTask(Task* task)
     QJsonArray array = _JsonDoc.array();
     for (const auto taskInJson : array)
     {
-        auto jsonId = taskInJson.toObject().find("id")->toInt();
-        qDebug() << "jsonId:" << jsonId;
-        if (jsonId == task->getTaskId())
-        {
-            array.removeAt(jsonId);
-            _JsonDoc.setArray(array);
-            saveJson(_JsonDoc, _DbPath);
+        int id = taskInJson.toObject().find("id")->toInt();
+        if (id != task->getTaskId()) { continue; }
 
-            qDebug() << "task removed in json database!";
-        }
+        array.removeAt(id);
+        _JsonDoc.setArray(array);
+        saveJson(_JsonDoc, _DbPath);
+
+        qDebug() << "Task " << task->getTaskId() << "removed in json database!";
     }
+
+    ui->tasksLayout->removeWidget(task);
 
     // remove the task
     delete task;
     task = nullptr;
-    ui->tasksLayout->removeWidget(task);
-    _Tasks.erase(std::remove(std::begin(_Tasks) ,std::end(_Tasks), nullptr), std::end(_Tasks));
+    _Tasks.shrink_to_fit();
+
+    // _Tasks.erase(std::remove(std::begin(_Tasks), std::end(_Tasks), nullptr), std::end(_Tasks));
 
     updateStatus();
 }
