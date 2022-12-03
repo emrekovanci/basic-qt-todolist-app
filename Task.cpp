@@ -20,7 +20,7 @@ Task::Task(const QString& name, QWidget* parent) : QWidget(parent), ui(new Ui::T
 
 Task::~Task()
 {
-    // delete ui;
+    delete ui;
 }
 
 void Task::setName(const QString& name)

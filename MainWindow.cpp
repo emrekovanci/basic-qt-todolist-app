@@ -30,16 +30,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::clearAllTasks()
 {
+    for (const Task* item : _Tasks)
+    {
+        delete item;
+    }
+
     auto fileName = this->path + "/db.json";
 
     QFile file(fileName);
     file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     file.close();
-
-    for (const Task* item : _Tasks)
-    {
-        delete item;
-    }
 }
 
 void MainWindow::addTask()
@@ -69,8 +69,6 @@ void MainWindow::addTask()
         // add created json object to json array
         QJsonArray array = _JsonDoc.array();
         array.append(newJson);
-
-        _JsonDoc.setArray(array);
         saveJson(_JsonDoc, fileName);
     }
 }
