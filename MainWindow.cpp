@@ -148,7 +148,7 @@ void MainWindow::createTask(int id, const QString& name, bool status)
     updateStatus();
 }
 
-QJsonDocument MainWindow::loadJson(const QString& fileName)
+QJsonDocument MainWindow::loadJson(const QString& fileName) const
 {
     QFile jsonFile{ fileName };
     jsonFile.open(QIODevice::ReadOnly);
@@ -156,7 +156,7 @@ QJsonDocument MainWindow::loadJson(const QString& fileName)
     return QJsonDocument::fromJson(jsonFile.readAll());
 }
 
-void MainWindow::saveJson(const QJsonDocument& document, const QString& fileName)
+void MainWindow::saveJson(const QJsonDocument& document, const QString& fileName) const
 {
     QFile jsonFile{ fileName };
     jsonFile.open(QIODevice::WriteOnly | QFile::Truncate);

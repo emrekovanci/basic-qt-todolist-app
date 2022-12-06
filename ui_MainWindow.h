@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
@@ -27,12 +28,13 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
-    QLabel *infoLabel;
     QHBoxLayout *toolBarLayout;
-    QProgressBar *progressBar;
+    QLabel *infoLabel;
     QSpacerItem *horizontalSpacer;
     QPushButton *addTaskButton;
     QPushButton *clearAllButton;
+    QProgressBar *progressBar;
+    QGroupBox *tasks;
     QVBoxLayout *tasksLayout;
     QSpacerItem *verticalSpacer;
 
@@ -40,30 +42,19 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(326, 175);
+        MainWindow->resize(613, 421);
         MainWindow->setAutoFillBackground(true);
         MainWindow->setStyleSheet(QString::fromUtf8(""));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         verticalLayout = new QVBoxLayout(centralwidget);
         verticalLayout->setObjectName("verticalLayout");
+        toolBarLayout = new QHBoxLayout();
+        toolBarLayout->setObjectName("toolBarLayout");
         infoLabel = new QLabel(centralwidget);
         infoLabel->setObjectName("infoLabel");
 
-        verticalLayout->addWidget(infoLabel);
-
-        toolBarLayout = new QHBoxLayout();
-        toolBarLayout->setObjectName("toolBarLayout");
-        progressBar = new QProgressBar(centralwidget);
-        progressBar->setObjectName("progressBar");
-        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(progressBar->sizePolicy().hasHeightForWidth());
-        progressBar->setSizePolicy(sizePolicy);
-        progressBar->setValue(24);
-
-        toolBarLayout->addWidget(progressBar);
+        toolBarLayout->addWidget(infoLabel);
 
         horizontalSpacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -84,10 +75,24 @@ public:
 
         verticalLayout->addLayout(toolBarLayout);
 
-        tasksLayout = new QVBoxLayout();
+        progressBar = new QProgressBar(centralwidget);
+        progressBar->setObjectName("progressBar");
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(progressBar->sizePolicy().hasHeightForWidth());
+        progressBar->setSizePolicy(sizePolicy);
+        progressBar->setValue(24);
+        progressBar->setTextVisible(false);
+
+        verticalLayout->addWidget(progressBar);
+
+        tasks = new QGroupBox(centralwidget);
+        tasks->setObjectName("tasks");
+        tasksLayout = new QVBoxLayout(tasks);
         tasksLayout->setObjectName("tasksLayout");
 
-        verticalLayout->addLayout(tasksLayout);
+        verticalLayout->addWidget(tasks);
 
         verticalSpacer = new QSpacerItem(20, 120, QSizePolicy::Minimum, QSizePolicy::Expanding);
 

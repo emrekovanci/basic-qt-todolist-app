@@ -36,6 +36,6 @@ private:
     void initializeOnBegin();
     void createTask(int id, const QString& name, bool status);
 
-    QJsonDocument loadJson(const QString& fileName);
-    void saveJson(const QJsonDocument& document, const QString& fileName);
+    QJsonDocument loadJson(const QString& fileName) const;
+    void saveJson(const QJsonDocument& document, const QString& fileName) const;
 };
