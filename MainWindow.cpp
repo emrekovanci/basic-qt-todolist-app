@@ -27,14 +27,13 @@ void MainWindow::initializeOnBegin()
 {
     if (readDB())
     {
-        QJsonArray taskList = _JsonDoc.array();
-        for (const auto val : taskList)
+        for (const auto& val : _JsonDoc.array())
         {
             int id = val.toObject().value("id").toInt();
             QString name = val.toObject().value("name").toString();
             bool status = val.toObject().value("status").toBool();
+
             createTask(id, name, status);
-            qDebug() << "Task ID:" << id << "-" << "Task Name:" << name;
         }
     }
 }
@@ -64,14 +63,7 @@ void MainWindow::addTask()
 
     if (ok && !name.isEmpty())
     {
-        qDebug() << "Adding new task";
-        auto task = new Task(name);
-        task->setTaskId(_Tasks.size());
-        _Tasks.append(task);
-        ui->tasksLayout->addWidget(task);
-        connect(task, &Task::removed, this, &MainWindow::removeTask);
-        connect(task, &Task::statusChanged, this, &MainWindow::updateStatus);
-        updateStatus();
+        createTask(_Tasks.size(), name, false);
 
         // create new json object with properties
         QJsonObject taskValues;
