@@ -70,6 +70,7 @@ void MainWindow::addTask()
         _Tasks.append(task);
         ui->tasksLayout->addWidget(task);
         connect(task, &Task::removed, this, &MainWindow::removeTask);
+        connect(task, &Task::statusChanged, this, &MainWindow::updateStatus);
         updateStatus();
 
         // create new json object with properties
@@ -139,12 +140,19 @@ bool MainWindow::readDB()
 
 void MainWindow::createTask(int id, const QString& name, bool status)
 {
-    Task* task = new Task(name);
+    // prepare taks
+    auto task = new Task(name);
     task->setChecked(status);
     task->setTaskId(id);
+
+    // prepare widget
     _Tasks.append(task);
     ui->tasksLayout->addWidget(task);
+
+    // bind events
     connect(task, &Task::removed, this, &MainWindow::removeTask);
+    connect(task, &Task::statusChanged, this, &MainWindow::updateStatus);
+
     updateStatus();
 }
 
