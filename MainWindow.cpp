@@ -65,7 +65,7 @@ void MainWindow::addTask()
     if (ok && !name.isEmpty())
     {
         qDebug() << "Adding new task";
-        Task* task = new Task(name);
+        auto task = new Task(name);
         task->setTaskId(_Tasks.size());
         _Tasks.append(task);
         ui->tasksLayout->addWidget(task);
@@ -108,7 +108,6 @@ void MainWindow::removeTask(Task* task)
     ui->tasksLayout->removeWidget(task);
 
     // remove the task
-    int taskIndex = _Tasks.indexOf(task);
     delete _Tasks.takeAt(_Tasks.indexOf(task));
     task = nullptr;
     _Tasks.shrink_to_fit();
@@ -171,11 +170,12 @@ void MainWindow::saveJson(const QJsonDocument& document, const QString& fileName
 
 void MainWindow::updateStatus()
 {
-    int completedTaskCount = std::count_if(
-        std::begin(_Tasks),
-        std::end(_Tasks),
-        [](Task* task) { return task->isCompleted(); }
+    auto completedTaskCount = std::ranges::count_if(
+        _Tasks,
+        [](const Task* task) { return task->isCompleted(); }
     );
 
-    ui->infoLabel->setText(QString("%1 todo / %2 completed").arg(_Tasks.count()).arg(completedTaskCount));
+    ui->infoLabel->setText(QString("%1 todo / %2 completed")
+        .arg(_Tasks.count())
+        .arg(completedTaskCount));
 }
