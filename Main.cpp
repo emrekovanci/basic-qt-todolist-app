@@ -30,14 +30,15 @@
     }
 #endif
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     QApplication a(argc, argv);
-    MainWindow w;
 
-    #ifdef Q_OS_ANDROID
-        requestAndroidPermissions();
-    #endif
+#ifdef Q_OS_ANDROID
+    requestAndroidPermissions();
+#endif
 
-    w.show();
+    MainWindow window;
+    window.show();
     return QApplication::exec();
 }
