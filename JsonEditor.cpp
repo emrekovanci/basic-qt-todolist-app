@@ -6,18 +6,18 @@
 namespace Json
 {
     JsonEditor::JsonEditor(const QString& fileName) :
-        _fileName{ fileName },
-        _jsonSource{ LoadJson() }
+        _FileName{ fileName },
+        _JsonSource{ LoadJson() }
     { }
 
     JsonEditor::JsonEditor(QString&& fileName) :
-        _fileName{ std::move(fileName) },
-        _jsonSource{ LoadJson() }
+        _FileName{ std::move(fileName) },
+        _JsonSource{ LoadJson() }
     { }
 
     std::unique_ptr<QJsonDocument> JsonEditor::LoadJson() const
     {
-        if (QFile jsonFile{ _fileName }; jsonFile.exists())
+        if (QFile jsonFile{ _FileName }; jsonFile.exists())
         {
             jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
             return std::make_unique<QJsonDocument>(QJsonDocument::fromJson(jsonFile.readAll()));
@@ -29,18 +29,18 @@ namespace Json
     // refresh entire-db
     void JsonEditor::Push(const QJsonObject& json) const
     {
-        QJsonArray array = _jsonSource->array();
+        QJsonArray array = _JsonSource->array();
         array.append(json);
-        _jsonSource->setArray(array);
+        _JsonSource->setArray(array);
 
         SaveJson();
     }
 
     void JsonEditor::SaveJson() const
     {
-        QFile jsonFile{ _fileName };
+        QFile jsonFile{ _FileName };
         jsonFile.open(QIODevice::WriteOnly | QFile::Truncate);
-        jsonFile.write(_jsonSource->toJson());
+        jsonFile.write(_JsonSource->toJson());
 
         if (jsonFile.error())
         {

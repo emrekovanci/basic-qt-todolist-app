@@ -63,7 +63,6 @@ void MainWindow::addTask()
     bool ok{ false };
     QString name = QInputDialog::getText(this, tr("Add Task"), tr("Task Name"), QLineEdit::Normal, tr("Untitled Task"), &ok);
 
-    Json::JsonEditor reader{ _DbPath };
 
     if (ok && !name.isEmpty())
     {
@@ -75,7 +74,7 @@ void MainWindow::addTask()
         taskJson["status"] = false;
         taskJson["id"] = _Tasks.size();
 
-        reader.Push(taskJson);
+        _JsonEditor.Push(taskJson);
     }
 }
 

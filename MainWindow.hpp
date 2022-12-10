@@ -6,6 +6,7 @@
 #include <QStandardPaths>
 
 #include "Task.hpp"
+#include "JsonEditor.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,7 +30,8 @@ private:
     Ui::MainWindow* ui;
     QVector<Task*> _Tasks;
     QJsonDocument _JsonDoc;
-    QString _DbPath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + QString("/db.json");
+    const QString _DbPath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + QString("/db.json");
+    const Json::JsonEditor _JsonEditor { _DbPath };
 
 private:
     bool readDB();

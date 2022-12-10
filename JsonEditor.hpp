@@ -18,7 +18,7 @@ namespace Json
         void SaveJson() const;
         ~JsonEditor() = default;
     private:
-        const QString _fileName;
-        std::unique_ptr<QJsonDocument> _jsonSource;
+        const QString _FileName;
+        std::unique_ptr<QJsonDocument> _JsonSource;
     };
 }
