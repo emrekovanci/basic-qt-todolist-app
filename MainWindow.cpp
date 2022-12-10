@@ -12,6 +12,8 @@
 #include <QJsonParseError>
 #include <QJsonObject>
 
+#include "JsonEditor.hpp"
+
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -61,6 +63,8 @@ void MainWindow::addTask()
     bool ok{ false };
     QString name = QInputDialog::getText(this, tr("Add Task"), tr("Task Name"), QLineEdit::Normal, tr("Untitled Task"), &ok);
 
+    Json::JsonEditor reader{ _DbPath };
+
     if (ok && !name.isEmpty())
     {
         createTask(_Tasks.size(), name, false);
@@ -76,7 +80,7 @@ void MainWindow::addTask()
         array.append(taskValues);
         _JsonDoc.setArray(array);
 
-        saveJson(_JsonDoc, _DbPath);
+        reader.SaveJson(_JsonDoc);
     }
 }
 
@@ -86,7 +90,7 @@ void MainWindow::removeTask(Task* task)
 
     // search task in json and remove it
     QJsonArray array = _JsonDoc.array();
-    for (const auto taskInJson : array)
+    for (const auto& taskInJson : array)
     {
         int id = taskInJson.toObject().find("id")->toInt();
         if (id != task->getTaskId()) { continue; }
@@ -96,7 +100,9 @@ void MainWindow::removeTask(Task* task)
 
     array.takeAt(index);
     _JsonDoc.setArray(array);
-    saveJson(_JsonDoc, _DbPath);
+
+    Json::JsonEditor reader{_DbPath};
+    reader.SaveJson(_JsonDoc);
 
     ui->tasksLayout->removeWidget(task);
 
@@ -110,23 +116,22 @@ void MainWindow::removeTask(Task* task)
 
 bool MainWindow::readDB()
 {
-    qDebug() << "File reading:" << _DbPath;
-
     QJsonParseError json_error{};
 
-    QFile file(_DbPath);
-    if (file.exists())
+    if (QFile file(_DbPath); file.exists())
     {
         file.open(QIODevice::ReadOnly | QIODevice::Text);
         QString jsonString = QString::fromUtf8(file.readAll());
         _JsonDoc = QJsonDocument::fromJson(jsonString.toUtf8(), &json_error);
+
         if (json_error.error != QJsonParseError::NoError)
         {
             qDebug() << "Error:" << json_error.errorString() << " offset:" << json_error.offset;
-            return false;
         }
-        return true;
+
+        return json_error.error == QJsonParseError::NoError;
     }
+
     return false;
 }
 
@@ -146,26 +151,6 @@ void MainWindow::createTask(int id, const QString& name, bool status)
     connect(task, &Task::statusChanged, this, &MainWindow::updateStatus);
 
     updateStatus();
-}
-
-QJsonDocument MainWindow::loadJson(const QString& fileName) const
-{
-    QFile jsonFile{ fileName };
-    jsonFile.open(QIODevice::ReadOnly);
-
-    return QJsonDocument::fromJson(jsonFile.readAll());
-}
-
-void MainWindow::saveJson(const QJsonDocument& document, const QString& fileName) const
-{
-    QFile jsonFile{ fileName };
-    jsonFile.open(QIODevice::WriteOnly | QFile::Truncate);
-    jsonFile.write(document.toJson());
-
-    if (jsonFile.error())
-    {
-        qDebug() << "Error:" << jsonFile.errorString();
-    }
 }
 
 void MainWindow::updateStatus()

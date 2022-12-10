@@ -193,6 +193,7 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="JsonEditor.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Task.cpp" />
@@ -235,6 +236,9 @@
     <None Include="android\gradlew" />
     <None Include="android\gradlew.bat" />
     <None Include="android\res\values\libs.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="JsonEditor.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
