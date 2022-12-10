@@ -5,14 +5,10 @@
 
 namespace Json
 {
-    JsonEditor::JsonEditor(const QString& fileName) :
-        _FileName{ fileName },
-        _JsonSource{ LoadJson() }
+    JsonEditor::JsonEditor(const QString& fileName) : _FileName{ fileName }
     { }
 
-    JsonEditor::JsonEditor(QString&& fileName) :
-        _FileName{ std::move(fileName) },
-        _JsonSource{ LoadJson() }
+    JsonEditor::JsonEditor(QString&& fileName) : _FileName{ std::move(fileName) }
     { }
 
     std::unique_ptr<QJsonDocument> JsonEditor::LoadJson() const
