@@ -12,10 +12,13 @@ namespace Json
 
     QJsonDocument JsonEditor::LoadJson() const
     {
-        QFile jsonFile{ _fileName };
-        jsonFile.open(QIODevice::ReadOnly);
+        if (QFile jsonFile{ _fileName }; jsonFile.exists())
+        {
+            jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+            return QJsonDocument::fromJson(jsonFile.readAll());
+        }
 
-        return QJsonDocument::fromJson(jsonFile.readAll());
+        return QJsonDocument{};
     }
 
     void JsonEditor::SaveJson(const QJsonDocument& document) const
