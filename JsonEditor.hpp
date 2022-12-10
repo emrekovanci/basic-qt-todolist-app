@@ -4,6 +4,8 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 
+#include <memory>
+
 namespace Json
 {
     class JsonEditor
@@ -11,10 +13,12 @@ namespace Json
     public:
         explicit JsonEditor(const QString& fileName);
         explicit JsonEditor(QString&& fileName);
-        QJsonDocument LoadJson() const;
-        void SaveJson(const QJsonDocument& document) const;
+        std::unique_ptr<QJsonDocument> LoadJson() const;
+        void Push(const QJsonObject& json) const;
+        void SaveJson() const;
         ~JsonEditor() = default;
     private:
         const QString _fileName;
+        std::unique_ptr<QJsonDocument> _jsonSource;
     };
 }

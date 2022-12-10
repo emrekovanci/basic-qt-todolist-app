@@ -70,17 +70,12 @@ void MainWindow::addTask()
         createTask(_Tasks.size(), name, false);
 
         // create new json object with properties
-        QJsonObject taskValues;
-        taskValues.insert("name", name);
-        taskValues.insert("status", false);
-        taskValues.insert("id", _Tasks.size());
+        QJsonObject taskJson{};
+        taskJson["name"] = name;
+        taskJson["status"] = false;
+        taskJson["id"] = _Tasks.size();
 
-        // add created json object to json array
-        QJsonArray array = _JsonDoc.array();
-        array.append(taskValues);
-        _JsonDoc.setArray(array);
-
-        reader.SaveJson(_JsonDoc);
+        reader.Push(taskJson);
     }
 }
 
@@ -102,7 +97,7 @@ void MainWindow::removeTask(Task* task)
     _JsonDoc.setArray(array);
 
     Json::JsonEditor reader{_DbPath};
-    reader.SaveJson(_JsonDoc);
+    reader.SaveJson();
 
     ui->tasksLayout->removeWidget(task);
 
