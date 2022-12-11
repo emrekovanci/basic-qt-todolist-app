@@ -62,18 +62,16 @@ void MainWindow::addTask()
     bool ok{ false };
     QString name = QInputDialog::getText(this, tr("Add Task"), tr("Task Name"), QLineEdit::Normal, tr("Untitled Task"), &ok);
 
-
     if (ok && !name.isEmpty())
     {
         createTask(_Tasks.size(), name, false);
 
-        // create new json object with properties
-        QJsonObject taskJson{};
-        taskJson["name"] = name;
-        taskJson["status"] = false;
-        taskJson["id"] = _Tasks.size();
-
-        _JsonEditor.Push(taskJson);
+        _JsonEditor.Push(
+        {
+            { "name", name },
+            { "status", false },
+            { "id", _Tasks.size() }
+        });
     }
 }
 
