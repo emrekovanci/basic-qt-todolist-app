@@ -11,15 +11,15 @@ namespace Json
     JsonEditor::JsonEditor(QString&& fileName) : _FileName{ std::move(fileName) }
     { }
 
-    std::unique_ptr<QJsonDocument> JsonEditor::LoadJson() const
+    std::shared_ptr<QJsonDocument> JsonEditor::LoadJson() const
     {
         if (QFile jsonFile{ _FileName }; jsonFile.exists())
         {
             jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
-            return std::make_unique<QJsonDocument>(QJsonDocument::fromJson(jsonFile.readAll()));
+            return std::make_shared<QJsonDocument>(QJsonDocument::fromJson(jsonFile.readAll()));
         }
 
-        return std::make_unique<QJsonDocument>();
+        return std::make_shared<QJsonDocument>();
     }
 
     // refresh entire-db
@@ -30,6 +30,11 @@ namespace Json
         _JsonSource->setArray(array);
 
         SaveJson();
+    }
+
+    std::shared_ptr<QJsonDocument> JsonEditor::GetSource() const
+    {
+        return _JsonSource;
     }
 
     void JsonEditor::SaveJson() const

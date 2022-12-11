@@ -29,12 +29,10 @@ public slots:
 private:
     Ui::MainWindow* ui;
     QVector<Task*> _Tasks;
-    QJsonDocument _JsonDoc;
     const QString _DbPath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + QString("/db.json");
     const Json::JsonEditor _JsonEditor { _DbPath };
 
 private:
-    bool readDB();
     void initializeOnBegin();
     void createTask(int id, const QString& name, bool status);
 };

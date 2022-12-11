@@ -27,16 +27,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 void MainWindow::initializeOnBegin()
 {
-    if (readDB())
+    for (const auto& val : _JsonEditor.GetSource()->array())
     {
-        for (const auto& val : _JsonDoc.array())
-        {
-            int id = val.toObject().value("id").toInt();
-            QString name = val.toObject().value("name").toString();
-            bool status = val.toObject().value("status").toBool();
+        int id = val.toObject().value("id").toInt();
+        QString name = val.toObject().value("name").toString();
+        bool status = val.toObject().value("status").toBool();
 
-            createTask(id, name, status);
-        }
+        createTask(id, name, status);
     }
 }
 
@@ -83,7 +80,7 @@ void MainWindow::removeTask(Task* task)
     int index{-1};
 
     // search task in json and remove it
-    QJsonArray array = _JsonDoc.array();
+    QJsonArray array = _JsonEditor.GetSource()->array();
     for (const auto& taskInJson : array)
     {
         int id = taskInJson.toObject().find("id")->toInt();
@@ -93,10 +90,8 @@ void MainWindow::removeTask(Task* task)
     }
 
     array.takeAt(index);
-    _JsonDoc.setArray(array);
-
-    Json::JsonEditor reader{_DbPath};
-    reader.SaveJson();
+    _JsonEditor.GetSource()->setArray(array);
+    _JsonEditor.SaveJson();
 
     ui->tasksLayout->removeWidget(task);
 
@@ -106,27 +101,6 @@ void MainWindow::removeTask(Task* task)
     _Tasks.shrink_to_fit();
 
     updateStatus();
-}
-
-bool MainWindow::readDB()
-{
-    QJsonParseError json_error{};
-
-    if (QFile file(_DbPath); file.exists())
-    {
-        file.open(QIODevice::ReadOnly | QIODevice::Text);
-        QString jsonString = QString::fromUtf8(file.readAll());
-        _JsonDoc = QJsonDocument::fromJson(jsonString.toUtf8(), &json_error);
-
-        if (json_error.error != QJsonParseError::NoError)
-        {
-            qDebug() << "Error:" << json_error.errorString() << " offset:" << json_error.offset;
-        }
-
-        return json_error.error == QJsonParseError::NoError;
-    }
-
-    return false;
 }
 
 void MainWindow::createTask(int id, const QString& name, bool status)
