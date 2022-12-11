@@ -33,6 +33,6 @@ private:
     const Json::JsonEditor _JsonEditor { _DbPath };
 
 private:
-    void initializeOnBegin();
+    void initTasks();
     void createTask(int id, const QString& name, bool status);
 };

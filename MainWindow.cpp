@@ -18,20 +18,22 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
 
-    initializeOnBegin();
+    initTasks();
     updateStatus();
 
     connect(ui->addTaskButton, &QPushButton::clicked, this, &MainWindow::addTask);
     connect(ui->clearAllButton, &QPushButton::clicked, this, &MainWindow::clearAllTasks);
 }
 
-void MainWindow::initializeOnBegin()
+void MainWindow::initTasks()
 {
     for (const auto& val : _JsonEditor.GetSource()->array())
     {
-        int id = val.toObject().value("id").toInt();
-        QString name = val.toObject().value("name").toString();
-        bool status = val.toObject().value("status").toBool();
+        const auto& jsonObject = val.toObject();
+
+        int id = jsonObject["id"].toInt();
+        QString name = jsonObject["name"].toString();
+        bool status = jsonObject["status"].toBool();
 
         createTask(id, name, status);
     }
